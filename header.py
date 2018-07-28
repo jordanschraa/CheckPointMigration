@@ -5,6 +5,10 @@ import getpass
 import urllib3
 import logging
 
+#handles getting credentials, logging in and api calls
+#functions to import authenticate, api_post
+#from header import authenticate, api_post
+
 logging.basicConfig(format='%(message)s',
                 filename='logs.log',
                 filemode='w',
@@ -46,12 +50,13 @@ def login(cred):
     if code == 200:
         logging.info("Login to " + cred["ip"] + " with user " + cred["user"])
         logging.info("API Call. Command: login Code: " + str(code))
+        cred["sid"] = data["sid"]
+        return cred
     else:
-        logging.error("API Call. Command: " + request + " Code: " + str(code))
-    
-    cred["sid"] = data["sid"]
-    
-    return cred
+        logging.info("Attempted to login to " + cred["ip"] + " with user " + cred["user"])
+        logging.error("API Call. Command: login Code: " + str(code))
+        print("Error authenticating to managment server. Exiting...")
+        exit()
     
 def get_credentials():
     '''Handles getting credentials from user
