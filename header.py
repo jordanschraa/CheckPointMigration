@@ -14,6 +14,7 @@ logging.basicConfig(format='%(message)s',
                 filemode='w',
                 level=logging.INFO)
 
+#disable warning about insecure web call Check Point has self signed cert
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 def api_post(cred, request, json_data):
@@ -47,11 +48,13 @@ def login(cred):
     code = data.status_code
     data = data.json()
     
+    #if sucessful log, update sid and return
     if code == 200:
         logging.info("Login to " + cred["ip"] + " with user " + cred["user"])
         logging.info("API Call. Command: login Code: " + str(code))
         cred["sid"] = data["sid"]
         return cred
+    #if not sucessful log and exit
     else:
         logging.info("Attempted to login to " + cred["ip"] + " with user " + cred["user"])
         logging.error("API Call. Command: login Code: " + str(code))
