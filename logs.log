@@ -1,0 +1,7 @@
+Login to 157.56.178.19 with user admin
+API Call. Command: login Code: 200
+API Call. Command: add-host Code: 200
+API Call. Command: add-network Code: 400
+{'name': 'Network1', 'subnet': '197.139.0.0', 'mask-length': 16, 'tags': 'MgmtAPI'}
+API Call. Command: publish Code: 200
+API Call. Command: logout Code: 200

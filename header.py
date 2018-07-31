@@ -34,6 +34,7 @@ def api_post(cred, request, json_data):
         logging.info("API Call. Command: " + request + " Code: " + str(code))
     else:
         logging.error("API Call. Command: " + request + " Code: " + str(code))
+        logging.info(json_data)
     
     return data, code
     
