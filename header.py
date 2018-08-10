@@ -4,6 +4,8 @@ import os.path
 import getpass
 import urllib3
 import logging
+import names
+import random
 
 #handles getting credentials, logging in and api calls
 #functions to import authenticate, api_post
@@ -17,6 +19,48 @@ logging.basicConfig(format='%(message)s',
 #disable warning about insecure web call Check Point has self signed cert
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
+def generate_host(private = "", subnet = 0, tag = None):
+    '''Function for demo purposes
+    Create a new host dictonary and return credentials
+    provide first two octects for private ip /24 network'''
+    host = {}
+    host["name"] = names.get_full_name()
+    
+    #create public ip
+    if subnet == 0:
+        host["ipv4-address"] = '{}.{}.{}.{}'.format(*__import__('random').sample(range(5,254),4))
+    #create private ip
+    elif subnet == 16:
+        host["ipv4-address"] = private+".{}.{}".format(*__import__('random').sample(range(5,254),2))
+    elif subnet == 24:
+        host["ipv4-address"] = private+".{}".format(random.randint(5,254))
+    
+    if tag != None:
+        host["tags"] = tag
+        
+    return host
+
+def generate_network(name, mask, tag = None):
+    '''Function for demo purposes
+    Generates a network object in dictonary format
+    subnet can be either 8, 16, 24 just for demonstration purposes'''
+    
+    network = {}
+    network["name"] = name
+    
+    if mask == 8:
+        network["subnet"] = "{}.0.0.0".format(random.randint(5,254))
+    elif mask == 16:
+        network["subnet"] = "{}.{}.0.0".format(*__import__('random').sample(range(5,254),2))
+    elif mask == 24:
+        network["subnet"] = "{}.{}.{}.0".format(*__import__('random').sample(range(5,254),3))
+        
+    network["mask-length"] = mask
+
+    if tag != None:
+        network["tags"] = tag
+    
+    return network
 def api_post(cred, request, json_data):
     '''Post request to checkpoints API using requests
     cred is a dictonary with all the credentials
@@ -47,7 +91,12 @@ def login(cred):
     
     data = requests.post(url,data=json.dumps(payload), headers=request_headers, verify=False)
     code = data.status_code
-    data = data.json()
+    
+    try:
+        data = data.json()
+    except:
+        print("error exiting... is API enabled on Mangement station?")
+        exit()
     
     #if sucessful log, update sid and return
     if code == 200:
