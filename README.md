@@ -7,7 +7,7 @@
  - python requests
  - Check Point Management Server with API calls enabled
  
-#### Notes about header.py
+#### header.py
  - header.py can be used as the basis for python programs with Check Point API
  - contains two usefull functions authenticate and api_post
    - authenticate displays collects Check Point management credentials from the user and writes them to a file for easier logins in the future. Collection of credentials done with a menu style. Authenticate will also handle the first time login and will return dictonary that contians sessions id and logon credentials
