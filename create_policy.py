@@ -16,7 +16,6 @@ def main():
     
     #each object is a list the first position is the type of object
     #the second position is the data
-    
     '''
     for key in okeys:
         if key in okeys:
@@ -25,10 +24,11 @@ def main():
     '''
     #r,c = api_post(cred, "add-access-rule", policies["Management_Rule"][1])
           
-    #print(c)
-    api_post(cred, "publish", {})
     
+    api_post(cred, "publish", {})
     api_post(cred, "logout", {})
+    
+    return
     
 if __name__ == "__main__":
     main()
