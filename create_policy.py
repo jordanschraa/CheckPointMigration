@@ -16,13 +16,16 @@ def main():
     
     #each object is a list the first position is the type of object
     #the second position is the data
+    
+    '''
     for key in okeys:
-        if key in ["API_Policy"]:
+        if key in okeys:
             r,c = api_post(cred, "add-"+objects[key][0], objects[key][1])
             print(c)
-    
-    api_post(cred, "set-access-layer", objects["API_Policy Network"][1])
-            
+    '''
+    #r,c = api_post(cred, "add-access-rule", policies["Management_Rule"][1])
+          
+    #print(c)
     api_post(cred, "publish", {})
     
     api_post(cred, "logout", {})

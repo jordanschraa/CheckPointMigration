@@ -70,8 +70,9 @@ def api_post(cred, request, json_data):
     url = "https://" + cred["ip"] + ":" + str(cred["port"]) + "/web_api/" + request
     request_headers = {"Content-Type" : "application/json", "X-chkp-sid" : cred["sid"]}
         
-    data = requests.post(url,data=json.dumps(json_data), headers=request_headers, verify=False)
-    code = data.status_code
+    response = requests.post(url,data=json.dumps(json_data), headers=request_headers, verify=False)
+    code = response.status_code
+    data = response.content
     
     #check that response was good and logging
     if code == 200:
@@ -79,6 +80,7 @@ def api_post(cred, request, json_data):
     else:
         logging.error("API Call. Command: " + request + " Code: " + str(code))
         logging.info(json_data)
+        logging.info(data)
     
     return data, code
     
