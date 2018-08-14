@@ -3,6 +3,7 @@ import requests
 import os.path
 import getpass
 import urllib3
+import logging
 
 #handles getting credentials, logging in and api calls
 #functions to import authenticate, api_post
@@ -27,7 +28,7 @@ def api_post(cred, request, json_data):
         
     response = requests.post(url,data=json.dumps(json_data), headers=request_headers, verify=False)
     code = response.status_code
-    data = response.content
+    data = json.loads(response.content)
     
     #check that response was good and logging
     if code == 200:
