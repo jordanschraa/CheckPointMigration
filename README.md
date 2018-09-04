@@ -37,8 +37,6 @@
   - all the changes will be visible at the end when the session is published
   
 #### TODO:
-  - in migration.py make sure the "Old" tag is not added to newly created objects
-  - migration-cleanup.py is a WIP
   - create a video demonstrating migration.py and migration-cleanup.py
   - fix logging on header.py (it is not logging some of the set API commands)
   - create a more sensible ruleset in objects.json and policy.json
