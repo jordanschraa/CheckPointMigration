@@ -12,7 +12,7 @@ import logging
 logging.basicConfig(format='%(message)s',
                 filename='logs.log',
                 filemode='w',
-                level=logging.DEBUG)
+                level=logging.INFO)
 
 #disable warning about insecure web call Check Point has self signed cert
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)

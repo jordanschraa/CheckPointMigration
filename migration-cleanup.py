@@ -2,6 +2,28 @@ from header import authenticate, api_post
 import json
 import pprint
 
+def cleanup(cred, object_type, uid, layer, rule_uid, source_destination):
+    r,c = api_post(cred, "show-"+object_type, {"uid":uid})
+    #put tags into one list
+    tag_list = []
+    for tag in r["tags"]:
+        tag_list.append(tag["name"])
+
+    #remove object from rule 
+    #TODO: edit this when the bug of added old to new instances is fixed
+    if "Old" in tag_list and "New" not in tag_list:
+        print("Removing "+ r["name"])
+        delete,c = api_post(cred, "set-access-rule", {"uid": rule_uid, "layer": layer, source_destination: {"remove": r["uid"]}})
+
+    #we cannot rename the object unless we delete the old object
+    '''    
+    if "New" in tag_list:
+        #remove the "-NEW" from the name
+        new_name = r["name"][:-4]
+        print("Renaming " + r["name"])
+        edit,c = api_post(cred, "set-"+object_type, {"uid": r["uid"], "new-name": new_name})
+    '''
+    
 def main():
     cred = authenticate()
     print("Authentication Successful")
@@ -25,17 +47,19 @@ def main():
             r,c = api_post(cred, "show-object", {"uid":item})
             object_type = r["object"]["type"]
             
-            if object_type == "host":
-                r,c = api_post(cred, "show-host", {"uid":item})
-                print(r["name"])
-                for tag in r["tags"]:
-                    print(tag["name"])
-                print("")
+            if object_type in ["host", "network"]:
+                cleanup(cred, object_type, item, layer, rule_uid, "source")
+        
+        #for each destination item in that rule
+        for item in rule["destination"]:
+            r,c = api_post(cred, "show-object", {"uid":item})
+            object_type = r["object"]["type"]
             
-            #delete from rule
-            #r,c = api_post(cred, "set-access-rule", {"uid": rule_uid, "layer": layer, "source": {"add": new_host_uid}})
+            if object_type in ["host", "network"]:
+                cleanup(cred, object_type, item, layer, rule_uid, "destination")
+                
     
-    #api_post(cred, "publish", {})
+    api_post(cred, "publish", {})
     api_post(cred, "logout", {})
     
     return

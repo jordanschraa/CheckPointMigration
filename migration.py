@@ -86,11 +86,11 @@ def regex_rules(ip):
         new_ip = "192.168.54."+s4
         return new_ip, "dark sea green"
     
-    #RULE THREE 192.168.5.* --> 192.168.35.*
-    elif s1 == "192" and s2 == "168" and s3 == "5":
-        print("--- RULE THREE MATCH ---")
-        new_ip = "192.168.35."+s4
-        return new_ip, "gold"
+#    #RULE THREE 192.168.5.* --> 192.168.35.*
+#    elif s1 == "192" and s2 == "168" and s3 == "5":
+#        print("--- RULE THREE MATCH ---")
+#        new_ip = "192.168.35."+s4
+#        return new_ip, "gold"
     
     #NO RULE MATCH
     else:
@@ -98,7 +98,7 @@ def regex_rules(ip):
     
 def main():
     cred = authenticate()
-    print("authentication successful")
+    print("Authentication Successful")
     pp = pprint.PrettyPrinter(indent=4)
     policy_query = {
         "offset" : 0,
@@ -113,6 +113,7 @@ def main():
     layer = "API_Policy Network"
     #for each rule
     for rule in r["rulebase"]:
+        print(rule["name"])
         rule_uid = rule["uid"]
         #for each source item in that rule
         for item in rule["source"]:
@@ -139,7 +140,7 @@ def main():
                 
             #more work to parse group
             elif object_type == "group":
-                print("group")
+                continue
                 
             else:
                 continue
@@ -169,7 +170,7 @@ def main():
                 
             #more work to parse group
             elif object_type == "group":
-                print("group")
+                continue
                 
             else:
                 continue
