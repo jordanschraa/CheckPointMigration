@@ -1,13 +1,14 @@
 from header import authenticate, api_post
 import json
+import csv
 import pprint
 
-def host_duplicate(cred, host_uid):
+def host_duplicate(cred, host_uid, rule_set):
     new_host = {}
     old_host,c = api_post(cred, "show-host", {"uid": host_uid})
     
     #check to see if ip matches regex rule
-    new_ip, color = regex_rules(old_host["ipv4-address"])
+    new_ip, color = regex_rules(old_host["ipv4-address"], rule_set)
     #if it doesn't match rule no change is needed
     if new_ip == None:
         return None
@@ -36,12 +37,12 @@ def host_duplicate(cred, host_uid):
     
     return new_uid
 
-def network_duplicate(cred, network_uid):
+def network_duplicate(cred, network_uid, rule_set):
     new_network = {}
     old_network,c = api_post(cred, "show-network", {"uid": network_uid})
     
     #check to see if ip matches regex rule
-    new_ip, color = regex_rules(old_network["subnet4"])
+    new_ip, color = regex_rules(old_network["subnet4"], rule_set)
     #if it doesn't match rule no change is needed
     if new_ip == None:
         return None
@@ -71,32 +72,70 @@ def network_duplicate(cred, network_uid):
     
     return new_uid
     
-def regex_rules(ip):
+def regex_rules(ip, rule_set):
     s1, s2, s3, s4 = ip.split(".")
+    octet_input = [s1, s2, s3, s4]
     
-    #RULE ONE 10.0.1.* --> 10.5.1.*
-    if s1 == "10" and s2 == "0" and s3 == "1":
-        print("--- RULE ONE MATCH ---")
-        new_ip = "10.5.1."+s4
-        return new_ip, "blue"
+    count = 1
+    for rule in rule_set:
+        try:
+            r1, r2, r3, r4 = rule[0].split(".")
+            octet_rule = [r1, r2, r3, r4]
+
+            match = 1
+            for i in range(len(octet_rule)):
+                if octet_rule[i] == "*":
+                    continue
+                elif octet_rule[i] == octet_input[i]:
+                    continue
+                else:
+                    match = 0
+                    break
+                    
+            #when the rule matches create new ip and return
+            if match == 1:
+                print("Matched on rule #"+str(count))
+                ip_return = ""
+                n1, n2, n3, n4 = rule[1].split(".")
+                new_octet = [n1, n2, n3, n4]
+                for i in range(4):
+                    #if new_octet is a wild sub in input_octet
+                    if i != 3:
+                        if new_octet[i] == "*":
+                            ip_return = ip_return + octet_input[i] + "."
+                        else:
+                            ip_return = ip_return + new_octet[i] + "."
+                    else:
+                        if new_octet[i] == "*":
+                            ip_return = ip_return + octet_input[i]
+                        else:
+                            ip_return = ip_return + new_octet[i]
+                print("Orginal: "+ ip + " New: " + ip_return)
+                
+                return ip_return, "black"
+
+        except Exception as e:
+            #print(e)
+            continue
+        
+        count += 1
+        
+    #if no match is found
+    return None, None
     
-    #RULE TWO 192.168.26.* --> 192.168.54.*
-    elif s1 == "192" and s2 == "168" and s3 == "26":
-        print("--- RULE TWO MATCH ---")
-        new_ip = "192.168.54."+s4
-        return new_ip, "dark sea green"
-    
-#    #RULE THREE 192.168.5.* --> 192.168.35.*
-#    elif s1 == "192" and s2 == "168" and s3 == "5":
-#        print("--- RULE THREE MATCH ---")
-#        new_ip = "192.168.35."+s4
-#        return new_ip, "gold"
-    
-    #NO RULE MATCH
-    else:
-        return None, None
+def read_rules():
+    #opens files and read rules TODO: add filename from cmd
+    rule_set = []
+    with open("regex_rules.csv", 'r') as f:
+        reader = csv.reader(f)
+        for rule in reader:
+            rule_set.append(rule)
+    f.close()
+    return rule_set
+        
     
 def main():
+    rule_set = read_rules()
     cred = authenticate()
     print("Authentication Successful")
     pp = pprint.PrettyPrinter(indent=4)
@@ -113,7 +152,7 @@ def main():
     layer = "API_Policy Network"
     #for each rule
     for rule in r["rulebase"]:
-        print(rule["name"])
+        print("      --- " + rule["name"] + " --- ")
         rule_uid = rule["uid"]
         #for each source item in that rule
         for item in rule["source"]:
@@ -121,7 +160,7 @@ def main():
             object_type = r["object"]["type"]
             
             if object_type == "host":
-                new_host_uid = host_duplicate(cred, item)
+                new_host_uid = host_duplicate(cred, item, rule_set)
                 #if object did not match regex rules no modification of rule needed
                 if new_host_uid == None:
                     continue
@@ -130,7 +169,7 @@ def main():
                     r,c = api_post(cred, "set-access-rule", {"uid": rule_uid, "layer": layer, "source": {"add": new_host_uid}})
             
             if object_type == "network":
-                new_network_uid = network_duplicate(cred, item)
+                new_network_uid = network_duplicate(cred, item, rule_set)
                 #if object did not match regex rules no modification of rule needed
                 if new_network_uid == None:
                     continue
@@ -151,7 +190,7 @@ def main():
             object_type = r["object"]["type"]
             
             if object_type == "host":
-                new_host_uid = host_duplicate(cred, item)
+                new_host_uid = host_duplicate(cred, item, rule_set)
                 #if object did not match regex rules no modification of rule needed
                 if new_host_uid == None:
                     continue
@@ -160,7 +199,7 @@ def main():
                     r,c = api_post(cred, "set-access-rule", {"uid": rule_uid, "layer": layer, "destination": {"add": new_host_uid}})
                     
             if object_type == "network":
-                new_network_uid = network_duplicate(cred, item)
+                new_network_uid = network_duplicate(cred, item, rule_set)
                 #if object did not match regex rules no modification of rule needed
                 if new_network_uid == None:
                     continue
