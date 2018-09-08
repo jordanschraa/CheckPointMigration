@@ -1,4 +1,4 @@
-# Python-Scripts-Check-Point
+# CheckPointRegexRules
 
 #### Scripts to demo the intergration with Python and Check Point's API
 
@@ -22,7 +22,7 @@
   
 #### migration.py
   - migration.py is a program to help migration of a customer to Azure
-  - it will go over a rule set one rule at time and find objects in the source and destination columns that match the regex rules that are defined in the function regex_rules()
+  - it will go over a rule set one rule at time and find objects in the source and destination columns that match the regex rules that are defined in csv file
   - if the object matches a regex rule it will have a tag of "Old" added to it this is for cleanup purposes later
   - once it finds a match to the regex rule it will create a duplicate object that changes the IP based on the regex rule and adds "-NEW" to the name of the object. This new object will have a tag of "New" added to it
   - then it inserts the new object into the same position in the ruleset
@@ -37,6 +37,8 @@
   - all the changes will be visible at the end when the session is published
   
 #### TODO:
+  - be able to change groups in migration.py (skips them for the moment)
+  - add input for CSV file (right now it is hardcoded to regex_rules.csv)
   - create a video demonstrating migration.py and migration-cleanup.py
   - fix logging on header.py (it is not logging some of the set API commands)
   - create a more sensible ruleset in objects.json and policy.json
