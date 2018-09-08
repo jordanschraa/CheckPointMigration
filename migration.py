@@ -1,9 +1,11 @@
 from header import authenticate, api_post
 import json
 import csv
-import pprint
 
 def host_duplicate(cred, host_uid, rule_set):
+    '''Creates duplicate host IF ip matches rule in rule_set
+    return uid of new host, return None if no new host created'''
+    
     new_host = {}
     old_host,c = api_post(cred, "show-host", {"uid": host_uid})
     
@@ -38,6 +40,8 @@ def host_duplicate(cred, host_uid, rule_set):
     return new_uid
 
 def network_duplicate(cred, network_uid, rule_set):
+    '''Creates duplicate network IF ip matches rule in rule_set
+    return uid of new network, return None if no new network created'''
     new_network = {}
     old_network,c = api_post(cred, "show-network", {"uid": network_uid})
     
@@ -73,6 +77,10 @@ def network_duplicate(cred, network_uid, rule_set):
     return new_uid
     
 def regex_rules(ip, rule_set):
+    '''check for a match in the rule_set
+    returns new_ip, color if there is a match
+    returns None, None if there is no match'''
+    
     s1, s2, s3, s4 = ip.split(".")
     octet_input = [s1, s2, s3, s4]
     
@@ -84,10 +92,12 @@ def regex_rules(ip, rule_set):
 
             match = 1
             for i in range(len(octet_rule)):
+                #if there is a wildcard automatically match
                 if octet_rule[i] == "*":
                     continue
                 elif octet_rule[i] == octet_input[i]:
                     continue
+                #if the two octets do not match go to next rule
                 else:
                     match = 0
                     break
@@ -95,11 +105,12 @@ def regex_rules(ip, rule_set):
             #when the rule matches create new ip and return
             if match == 1:
                 print("Matched on rule #"+str(count))
+                #create new ip to return
                 ip_return = ""
                 n1, n2, n3, n4 = rule[1].split(".")
                 new_octet = [n1, n2, n3, n4]
                 for i in range(4):
-                    #if new_octet is a wild sub in input_octet
+                    #if new_octet is a wild put in input_octet
                     if i != 3:
                         if new_octet[i] == "*":
                             ip_return = ip_return + octet_input[i] + "."
@@ -124,7 +135,7 @@ def regex_rules(ip, rule_set):
     return None, None
     
 def read_rules():
-    #opens files and read rules TODO: add filename from cmd
+    '''opens files and read rules TODO: add filename from cmd'''
     rule_set = []
     with open("regex_rules.csv", 'r') as f:
         reader = csv.reader(f)
@@ -133,12 +144,12 @@ def read_rules():
     f.close()
     return rule_set
         
-    
 def main():
     rule_set = read_rules()
     cred = authenticate()
     print("Authentication Successful")
-    pp = pprint.PrettyPrinter(indent=4)
+
+    #change policy query if you are adapting this to your rulebase
     policy_query = {
         "offset" : 0,
         "limit" : 20,
@@ -177,10 +188,9 @@ def main():
                 else:
                     r,c = api_post(cred, "set-access-rule", {"uid": rule_uid, "layer": layer, "source": {"add": new_network_uid}})
                 
-            #more work to parse group
+            #TODO: add handling for group object
             elif object_type == "group":
                 continue
-                
             else:
                 continue
                 
@@ -207,14 +217,12 @@ def main():
                 else:
                     r,c = api_post(cred, "set-access-rule", {"uid": rule_uid, "layer": layer, "destination": {"add": new_network_uid}})
                 
-            #more work to parse group
+            #TODO: add handling for group object
             elif object_type == "group":
                 continue
-                
             else:
                 continue
                 
-
     api_post(cred, "publish", {})
     api_post(cred, "logout", {})
     

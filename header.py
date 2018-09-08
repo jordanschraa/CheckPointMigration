@@ -183,7 +183,6 @@ def authenticate():
     
     return cred
     
-    
 def main():
     return
 

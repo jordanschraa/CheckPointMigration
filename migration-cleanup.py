@@ -1,6 +1,5 @@
 from header import authenticate, api_post
 import json
-import pprint
 
 def cleanup(cred, object_type, uid, layer, rule_uid, source_destination):
     r,c = api_post(cred, "show-"+object_type, {"uid":uid})
@@ -27,7 +26,8 @@ def cleanup(cred, object_type, uid, layer, rule_uid, source_destination):
 def main():
     cred = authenticate()
     print("Authentication Successful")
-    pp = pprint.PrettyPrinter(indent=4)
+    
+    #change policy query if you are adapting this to your rulebase
     policy_query = {
         "offset" : 0,
         "limit" : 20,
@@ -58,7 +58,6 @@ def main():
             if object_type in ["host", "network"]:
                 cleanup(cred, object_type, item, layer, rule_uid, "destination")
                 
-    
     api_post(cred, "publish", {})
     api_post(cred, "logout", {})
     
