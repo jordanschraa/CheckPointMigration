@@ -19,7 +19,7 @@ def host_duplicate(cred, host_uid, rule_set):
     new_host["color"] = color
     new_host["comments"] = old_host["comments"]
     new_host["interfaces"] = old_host["interfaces"]
-    new_host["name"] = old_host["name"]+"-NEW"
+    new_host["name"] = old_host["name"]+"-AZ-"+new_ip
     new_host["nat-settings"] = old_host["nat-settings"]
     tags = []
     for tag in old_host["tags"]:
@@ -56,7 +56,7 @@ def network_duplicate(cred, network_uid, rule_set):
     new_network["broadcast"] = old_network["broadcast"]
     new_network["comments"] = old_network["comments"]
     new_network["mask-length4"] = old_network["mask-length4"]
-    new_network["name"] = old_network["name"]+"-NEW"
+    new_network["name"] = old_network["name"]+"-AZ-"+new_ip
     new_network["nat-settings"] = old_network["nat-settings"]
     tags = []
     for tag in old_network["tags"]:

@@ -1,0 +1,163 @@
+{
+    "RemoteUser": [
+        "host",
+        {
+            "name": "RemoteUser",
+            "ip-address": "158.100.126.50",
+            "tags": "API",
+            "color": "forest green"
+        }
+        
+    ],
+    
+    "InternalUser1": [
+        "host",
+        {
+            "name": "InternalUser1",
+            "ip-address": "192.168.3.13",
+            "tags": "API",
+            "color": "forest green"
+        }
+    ],
+    
+    "InternalUser2": [
+        "host",
+        {
+            "name": "InternalUser2",
+            "ip-address": "10.1.3.13",
+            "tags": "API",
+            "color": "forest green"
+        }
+    ],
+    
+    "SQL_Server1": [
+        "host",
+        {
+            "name": "SQL_Server1",
+            "ip-address": "192.168.5.15",
+            "tags": ["API", "SQL"],
+            "color": "turquoise"
+        }
+    ],
+    
+    "SQL_Server2": [
+        "host",
+        {
+            "name": "SQL_Server2",
+            "ip-address": "192.168.5.25",
+            "tags": ["API", "SQL"],
+            "color": "turquoise"
+        }
+    ],
+    
+    "SQL_Server3": [
+        "host",
+        {
+            "name": "SQL_Server3",
+            "ip-address": "192.168.5.35",
+            "tags": ["API", "SQL"],
+            "color": "turquoise"
+        }
+    ],
+    
+    "SQL_Server4": [
+        "host",
+        {
+            "name": "SQL_Server4",
+            "ip-address": "192.168.5.45",
+            "tags": ["API", "SQL"],
+            "color": "turquoise"
+        }
+    ],
+    
+    "Web_Server1": [
+        "host",
+        {
+            "name": "Web_Server1",
+            "ip-address": "10.0.1.15",
+            "tags": ["API", "Web"],
+            "color": "turquoise"
+        }
+    ],
+    
+    "Web_Server2": [
+        "host",
+        {
+            "name": "Web_Server2",
+            "ip-address": "10.0.1.25",
+            "tags": ["API", "Web"],
+            "color": "turquoise"
+        }
+    ],
+    
+    "Web_Server3": [
+        "host",
+        {
+            "name": "Web_Server3",
+            "ip-address": "10.0.1.35",
+            "tags": ["API", "Web"],
+            "color": "turquoise"
+        }
+    ],
+    
+    "Admin": [
+        "host",
+        {
+            "name": "Admin",
+            "ip-address": "70.75.116.15",
+            "tags": "API",
+            "color": "dark orange"
+        }
+    ],
+    
+    "cpManagment": [
+        "host",
+        {
+            "name": "cpManagment",
+            "ip-address": "40.87.70.225",
+            "tags": "API",
+            "color": "red"
+        }
+    ],
+    
+    "cpGateway": [
+        "host",
+        {
+            "name": "cpGateway",
+            "ip-address": "40.87.70.200",
+            "tags": "API",
+            "color": "purple"
+        }
+    ],
+    
+    "Management_Network": [
+        "network",
+        {
+            "name": "Management_Network",
+            "subnet": "192.168.1.0",
+            "subnet-mask": "255.255.255.0",
+            "tags": "API",
+            "color": "blue"
+        }
+    ],
+    
+    "External_Network": [
+        "network",
+        {
+            "name": "External_Network",
+            "subnet": "192.168.26.0",
+            "subnet-mask": "255.255.255.0",
+            "color": "red"
+        }
+    ],
+    
+    "Web_Group": [
+        "group",
+        {
+            "name": "Web_Group",
+            "members": ["Web_Server1", "Web_Server2", "Web_Server3"],
+            "tags": "API",
+            "color": "turquoise"
+        }
+    ]
+}

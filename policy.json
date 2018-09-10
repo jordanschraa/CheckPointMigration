@@ -1,0 +1,100 @@
+{
+    "API_Policy": [
+        "package",
+        {
+		  "name": "API_Policy",
+		  "access": true,
+		  "tags": "API",
+		  "threat-prevention": false,
+		  "color": "aquamarine"
+        }
+    ],
+    
+    "API_Policy Network": [
+        "access-layer",
+        {
+            "name": "API_Policy Network",
+            "applications-and-url-filtering": true,
+            "content-awareness": true,
+            "tags": "API",
+            "color": "orchid"
+        }
+    ],
+    
+    "Management_Rule": [
+        "access-rule",
+        {
+            "name": "Management_Rule",
+            "source": "Admin",
+            "destination": "cpManagment",
+            "layer": "API_Policy Network",
+            "position": "top",
+            "action": "Accept",
+            "track": {
+                "type": "Log"
+            }
+        }
+    ],
+    
+    "Stealth_Rule": [
+        "access-rule",
+        {
+            "name": "Stealth_Rule",
+            "source": "Any",
+            "destination": "cpGateway",
+            "layer": "API_Policy Network",
+            "position": 2,
+            "action": "Drop",
+            "track": {
+                "type": "Log"
+            }
+        }
+    ],
+    
+    "Remote_Access": [
+        "access-rule",
+        {
+            "name": "Remote_Access",
+            "source": "RemoteUser",
+            "destination": ["SQL_Server1", "SQL_Server2"],
+            "layer": "API_Policy Network",
+            "position": 3,
+            "action": "Accept",
+            "track": {
+                "type": "Log"
+            }
+        }
+    ],
+    
+    "Web_Access": [
+        "access-rule",
+        {
+            "name": "Web_Access",
+            "source": ["InternalUser1", "InternalUser2"],
+            "destination": "Internet",
+            "layer": "API_Policy Network",
+            "position": 4,
+            "service": ["Facebook", "Real Estate"],
+            "action": "Drop",
+            "track": {
+                "type": "Detailed Log"
+            }
+        }
+    ],
+    
+    "Web_Server_Update": [
+        "access-rule",
+        {
+            "name": "Web_Server_Update",
+            "source": ["Web_Server1", "Web_Server2", "Web_Server3"],
+            "destination": "Internet",
+            "layer": "API_Policy Network",
+            "position": 5,
+            "service": "Windows Server Update Service (WSUS)",
+            "action": "Accept",
+            "track": {
+                "type": "Log"
+            }
+        }
+    ]   
+}
