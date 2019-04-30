@@ -1,6 +1,7 @@
 # CheckPointRegexRules
 
 #### Scripts to demo the intergration with Python and Check Point's API
+These python scripts where created to help a customer clean up their rulebase ahead of their migration to the cloud. The purpose of these scripts is to go over the rulebase and translate IPs according regex_rules.csv file. First migration.py will be run which translate of the current network objects matching the left hand coloumn in the csv file and will create new objects which correspond to the right hand coloumn of the csv file. These new objects will be added into the same place rules as the original objects. Then once the correct functionality with the new objects is ensured migration-cleanup.py will be run. This will clean up the old objects. More information on migration.py and migration-cleanup.py is below.
 
 #### Dependencies
  - Python3
